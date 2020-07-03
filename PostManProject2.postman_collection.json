@@ -1,0 +1,204 @@
+{
+	"info": {
+		"_postman_id": "b7c7e4ac-ad66-4090-a92d-c0e6399201d4",
+		"name": "PostManProject2",
+		"description": "-create myboard increment by preresuqest\n-boardid and listId as environment variables\n-clear variables",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "CreateBoardAutomation",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "d2da7f3e-fdfb-452b-81c1-391b17dcd37e",
+						"exec": [
+							"let i = pm.environment.get(\"currentBoardNumber\")",
+							"if(i!=0)",
+							"{",
+							"    i++;",
+							"    console.log(i);",
+							"    ",
+							"}",
+							"else",
+							"{",
+							"    i=1;",
+							"}",
+							"var boardname = \"MyBoard\"+i;",
+							"console.log(boardname);",
+							"",
+							"pm.environment.set(\"BoardName\", boardname );",
+							"pm.environment.set(\"currentBoardNumber\",i)"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "f434085f-6f07-4a59-a615-ec77fd85375d",
+						"exec": [
+							"pm.test(\"Your test name\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    idBoard = jsonData.id;",
+							"});",
+							"",
+							"pm.environment.set(\"project2idBoard\", idBoard);",
+							"console.log(idBoard);",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://api.trello.com/1/boards/?key={{project2key}}&token={{project2token}}&name={{BoardName}}",
+					"protocol": "https",
+					"host": [
+						"api",
+						"trello",
+						"com"
+					],
+					"path": [
+						"1",
+						"boards",
+						""
+					],
+					"query": [
+						{
+							"key": "key",
+							"value": "{{project2key}}"
+						},
+						{
+							"key": "token",
+							"value": "{{project2token}}"
+						},
+						{
+							"key": "name",
+							"value": "{{BoardName}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CreateList",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "84f43b8a-5156-45c5-9099-33948f0e00cb",
+						"exec": [
+							"",
+							"pm.test(\"listId\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    idList= jsonData.id;",
+							"    ",
+							"});",
+							"",
+							"",
+							"pm.environment.set(\"project2idList\", idList);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://api.trello.com/1/lists?key={{project2key}}&token={{project2token}}&name=projectlist&idBoard={{project2idBoard}}",
+					"protocol": "https",
+					"host": [
+						"api",
+						"trello",
+						"com"
+					],
+					"path": [
+						"1",
+						"lists"
+					],
+					"query": [
+						{
+							"key": "key",
+							"value": "{{project2key}}"
+						},
+						{
+							"key": "token",
+							"value": "{{project2token}}"
+						},
+						{
+							"key": "name",
+							"value": "projectlist"
+						},
+						{
+							"key": "idBoard",
+							"value": "{{project2idBoard}}"
+						}
+					]
+				},
+				"description": "List creating  in order to produce the variable value"
+			},
+			"response": []
+		},
+		{
+			"name": "CreateCard",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ca8007c0-8d3a-4e93-87d4-58a9b52937b1",
+						"exec": [
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://api.trello.com/1/cards?key={{project2key}}&token={{project2token}}&idList={{project2idList}}",
+					"protocol": "https",
+					"host": [
+						"api",
+						"trello",
+						"com"
+					],
+					"path": [
+						"1",
+						"cards"
+					],
+					"query": [
+						{
+							"key": "key",
+							"value": "{{project2key}}"
+						},
+						{
+							"key": "token",
+							"value": "{{project2token}}"
+						},
+						{
+							"key": "idList",
+							"value": "{{project2idList}}"
+						}
+					]
+				},
+				"description": "By create card to invoke environment variables BoardId and ListId"
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
